@@ -95,8 +95,8 @@ resource "aws_instance" "web" {
 
   user_data = <<-EOF
               #!/bin/bash
-              yum update -y
-              yum install -y nginx
+              apt-get update -y
+              apt-get install -y nginx
               systemctl start nginx
               systemctl enable nginx
               EOF
