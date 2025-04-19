@@ -90,7 +90,7 @@ data "aws_key_pair" "my_key_pair" {
 }
 
 # EC2 Instance
-resource "aws_instance" "web" {
+resource "aws_instance" "web1" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.public.id
@@ -107,6 +107,27 @@ resource "aws_instance" "web" {
               EOF
 
   tags = {
-    Name = "${var.project_name}-web-server"
+    Name = "${var.project_name}-web-server1"
+  }
+}
+
+resource "aws_instance" "web2" {
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.web.id]
+  associate_public_ip_address = true
+  key_name                    = data.aws_key_pair.my_key_pair.key_name
+
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y nginx
+              systemctl start nginx
+              systemctl enable nginx
+              EOF
+
+  tags = {
+    Name = "${var.project_name}-web-server2"
   }
 }
